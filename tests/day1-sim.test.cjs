@@ -1,2 +1,16 @@
-const fs=require("fs"),vm=require("vm"),assert=require("assert");let ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync("world.js","utf8"),ctx);ctx.WORLD=ctx.window.WORLD;vm.runInContext(fs.readFileSync("day1-sim.js","utf8"),ctx);const S=ctx.window.Day1Sim,W=ctx.window.WORLD;let pass=0;function t(n,f){f();pass++;console.log("PASS",n)}
-t("Mercer begins at sheriff",()=>assert.equal(S.npcLocation("mercer",1122),"Sheriff's Office"));t("Mercer reaches Vance house",()=>assert.equal(S.npcLocation("mercer",1160),"Vance Residence"));t("Mercer returns sheriff",()=>assert.equal(S.npcLocation("mercer",1300),"Sheriff's Office"));t("Nora moves to Maggies",()=>assert.equal(S.npcLocation("nora",1270),"Maggie's Diner"));t("Gabriel moves rectory",()=>assert.equal(S.npcLocation("gabriel",1210),"Rectory"));t("church to downtown costs 12",()=>assert.equal(S.travelMinutes("St. Bartholomew's","Downtown"),12));t("downtown to Vance costs 9",()=>assert.equal(S.travelMinutes("Downtown","Vance Residence"),9));t("basement not initial known location",()=>assert(!W.characters.malric.knownLocations.includes("Church Basement")));t("archive not initial known location",()=>assert(!W.characters.malric.knownLocations.includes("Archive Room")));t("Redwater event happens without player",()=>assert(W.events.some(e=>e.id==="nora_redwater"&&e.at===1215));t("clinic cases happen without player",()=>assert(W.events.some(e=>e.id==="clinic_cases"));t("Blackridge power event happens offscreen",()=>assert(W.events.some(e=>e.id==="blackridge_power"&&e.location===null));console.log("DAY-1 SIM",pass+"/12");
+const fs=require("fs"),vm=require("vm"),assert=require("assert");
+let ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync("world.js","utf8"),ctx);ctx.WORLD=ctx.window.WORLD;vm.runInContext(fs.readFileSync("day1-sim.js","utf8"),ctx);
+const S=ctx.window.Day1Sim,W=ctx.window.WORLD;let pass=0;function t(n,f){f();pass++;console.log("PASS",n)}
+t("Mercer begins at sheriff",()=>assert.equal(S.npcLocation("mercer",1122),"Sheriff's Office"));
+t("Mercer reaches Vance house",()=>assert.equal(S.npcLocation("mercer",1160),"Vance Residence"));
+t("Mercer returns sheriff",()=>assert.equal(S.npcLocation("mercer",1300),"Sheriff's Office"));
+t("Nora moves to Maggies",()=>assert.equal(S.npcLocation("nora",1270),"Maggie's Diner"));
+t("Gabriel moves rectory",()=>assert.equal(S.npcLocation("gabriel",1210),"Rectory"));
+t("church to downtown costs 12",()=>assert.equal(S.travelMinutes("St. Bartholomew's","Downtown"),12));
+t("downtown to Vance costs 9",()=>assert.equal(S.travelMinutes("Downtown","Vance Residence"),9));
+t("basement not initial known location",()=>assert(!W.characters.malric.knownLocations.includes("Church Basement")));
+t("archive not initial known location",()=>assert(!W.characters.malric.knownLocations.includes("Archive Room")));
+t("Redwater event happens without player",()=>assert(W.events.some(e=>e.id==="nora_redwater"&&e.at===1215)));
+t("clinic cases happen without player",()=>assert(W.events.some(e=>e.id==="clinic_cases")));
+t("Blackridge power event happens offscreen",()=>assert(W.events.some(e=>e.id==="blackridge_power"&&e.location===null)));
+console.log("DAY-1 SIM",pass+"/12");
