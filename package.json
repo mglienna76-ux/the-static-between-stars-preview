@@ -1,0 +1,1 @@
+{"name":"static-between-stars-preview","private":true,"scripts":{"test":"node tests/engine-contract.test.cjs"}}
