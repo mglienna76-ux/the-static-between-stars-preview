@@ -1,1 +1,24 @@
-const fs=require("fs"),vm=require("vm"),assert=require("assert");let ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync("engine.js","utf8"),ctx);let E=ctx.window.Engine03,k=E.initialKnowledge();assert(!E.knows(k,"Church Basement"));assert(!E.knows(k,"Blackridge Sublevel 4"));assert.equal(E.metaknowledge("Go to Blackridge Sublevel 4",k),"sublevel 4");let world={locations:{"St. Bartholomew's":{exits:["Rectory"]},Rectory:{exits:["St. Bartholomew's"]}}};assert(E.validateMove(world,k,"St. Bartholomew's","Rectory").ok);assert(!E.validateMove(world,k,"St. Bartholomew's","Church Basement").ok);E.discover(k,"Church Basement");E.discoverRoute(k,"St. Bartholomew's","Church Basement");assert(E.knows(k,"Church Basement"));assert(E.rollGate("force open the door"));assert(!E.rollGate("open the unlocked door"));let s=E.safeNarration("There is not enough established context in the resolver state.");assert(!/resolver|context|state/i.test(s));console.log("ENGINE 0.3 CONTRACT TESTS PASS");
+const fs=require("fs"),vm=require("vm"),assert=require("assert");let ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync("engine.js","utf8"),ctx);const E=ctx.window.Engine03;
+let pass=0;function t(name,fn){try{fn();pass++;console.log("PASS",name)}catch(e){console.error("FAIL",name,e.message);process.exitCode=1}}
+let K=()=>E.initialKnowledge();
+t("basement unknown initially",()=>assert(!E.knows(K(),"Church Basement")));
+t("sublevel4 unknown",()=>assert(!E.knows(K(),"Blackridge Sublevel 4")));
+t("metaknowledge detected",()=>assert.equal(E.metaknowledge("go to Blackridge Sublevel 4",K()),"sublevel 4"));
+t("redwater metaknowledge detected",()=>assert.equal(E.metaknowledge("ask Mercer about Redwater",K()),"redwater"));
+t("ordinary open no roll",()=>assert(!E.rollGate("open the unlocked door")));
+t("force requires roll",()=>assert(E.rollGate("force open the locked door")));
+t("climb requires roll",()=>assert(E.rollGate("climb the wet wall")));
+t("speech no roll",()=>assert(!E.rollGate("ask Anna who she is")));
+t("diagnostic text sanitized",()=>assert(!/resolver|context|state/i.test(E.safeNarration("resolver context state"))));
+t("availability leak sanitized",()=>assert(!/available action/i.test(E.safeNarration("available action"))));
+t("discovery promotes knowledge",()=>{let k=K();E.discover(k,"Church Basement");assert(E.knows(k,"Church Basement"))});
+t("route discovery independent",()=>{let k=K();E.discoverRoute(k,"St. Bartholomew's","Church Basement");assert(k.routes["St. Bartholomew's|Church Basement"])});
+t("known direct movement valid",()=>{let w={locations:{"St. Bartholomew's":{exits:["Rectory"]}}},k=K();assert(E.validateMove(w,k,"St. Bartholomew's","Rectory").ok)});
+t("unknown destination rejected",()=>{let w={locations:{"St. Bartholomew's":{exits:["Church Basement"]}}},k=K();assert(!E.validateMove(w,k,"St. Bartholomew's","Church Basement").ok)});
+t("nonadjacent destination rejected",()=>{let w={locations:{"St. Bartholomew's":{exits:["Rectory"]}}},k=K();assert(!E.validateMove(w,k,"St. Bartholomew's","Clinic").ok)});
+t("npc absent rejected",()=>{let s={loc:"Church Basement",scene:{mode:"FREE_ACTION"},npcs:{mercer:{loc:"Sheriff's Office"}}};assert(!E.validateNpcPresence(s,"mercer"))});
+t("active conversation npc present",()=>{let s={loc:"Church Basement",scene:{mode:"CONVERSATION",npc:"anna"},npcs:{anna:{loc:null}}};assert(E.validateNpcPresence(s,"anna"))});
+t("moon is not silently known",()=>assert(!E.knows(K(),"Moon")));
+t("old whisper not silently known",()=>assert.equal(E.metaknowledge("go to Old Whisper",K()),"old whisper"));
+t("glasslake not silently known",()=>assert.equal(E.metaknowledge("tell Gabriel about Glasslake",K()),"glasslake"));
+console.log("TOTAL",pass,"/20");if(pass!==20)process.exitCode=1;
