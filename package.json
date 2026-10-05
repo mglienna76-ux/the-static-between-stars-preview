@@ -2,6 +2,6 @@
   "name": "static-between-stars-preview",
   "private": true,
   "scripts": {
-    "test": "node tests/context-persistence.test.cjs && node tests/core-verbs.test.cjs && node tests/engine-contract.test.cjs && node tests/scenario-breakit.test.cjs && node tests/semantic-cert.test.cjs && node tests/resolver-torture.test.cjs && node tests/day1-sim.test.cjs"
+    "test": "node tests/gm-validator.test.cjs && node tests/context-persistence.test.cjs && node tests/core-verbs.test.cjs && node tests/engine-contract.test.cjs && node tests/scenario-breakit.test.cjs && node tests/semantic-cert.test.cjs && node tests/resolver-torture.test.cjs && node tests/day1-sim.test.cjs"
   }
 }
