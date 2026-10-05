@@ -2,6 +2,6 @@
   "name": "static-between-stars-preview",
   "private": true,
   "scripts": {
-    "test": "node tests/engine-contract.test.cjs && node tests/scenario-breakit.test.cjs"
+    "test": "node tests/engine-contract.test.cjs && node tests/scenario-breakit.test.cjs && node tests/semantic-cert.test.cjs"
   }
 }
