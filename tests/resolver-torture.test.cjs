@@ -1,0 +1,16 @@
+const assert=require("assert"),fs=require("fs"),vm=require("vm");let ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync("engine.js","utf8"),ctx);const E=ctx.window.Engine03;
+const cases=[
+["MOVE","go upstairs"],["MOVE","head up there"],["MOVE","I want to go back upstairs"],["MOVE","let's get out of here"],["MOVE","walk toward the sound"],["MOVE","follow that voice"],["MOVE","go outside"],["MOVE","head downtown"],
+["SPEAK","talk to Anna"],["SPEAK","say hello to her"],["SPEAK","tell Gabriel I heard something"],["SPEAK","I tell Mercer I'll help"],["ASK","who are you?"],["ASK","ask her why she's here"],["ASK","what happened to Emily?"],["ASK","Mercer, what do you need?"],
+["OBSERVE","look around"],["OBSERVE","what's in here?"],["OBSERVE","take a closer look at her"],["OBSERVE","listen"],["SEARCH","search the room"],["SEARCH","check behind the door"],["SEARCH","look for footprints"],["SEARCH","see if there is another way out"],
+["INTERACT","touch her"],["INTERACT","open it"],["INTERACT","pick up the book"],["INTERACT","turn on my flashlight"],["USE_ITEM","use my flashlight"],["USE_ITEM","call Mercer on my phone"],["USE_ITEM","write it in my notebook"],
+["WAIT","wait"],["WAIT","wait ten minutes"],["WAIT","stay put"],["REST","go to sleep"],["REST","sit down and rest"],
+["STEALTH","sneak closer"],["STEALTH","move quietly"],["STEALTH","hide behind the door and watch"],["ATTACK","punch her"],["ATTACK","shoot the thing"],["ATTACK","hit it with the flashlight"],
+["OTHER","pray"],["OTHER","say a prayer"],["OTHER","sing loudly"],["OTHER","laugh"],["OTHER","cry"],["OTHER","scream for help"],
+["META","go to Blackridge Sublevel 4"],["META","take me to Old Whisper"],["META","ask Mercer about Redwater"],["META","what happened at Glasslake?"],["IMPOSSIBLE","teleport to the moon"],["IMPOSSIBLE","fly through the ceiling"],["IMPOSSIBLE","walk through the wall"],
+["AGENCY","make Malric trust Anna"],["AGENCY","Malric decides Anna is real"],["AGENCY","make me forgive myself"],["AGENCY","I suddenly know everything"],["COMPOUND","go upstairs and tell Gabriel about the voice"],["COMPOUND","open the door but don't go through it"],["COMPOUND","ask Anna who she is while backing toward the stairs"],["COMPOUND","turn on my flashlight and look for footprints"],
+["PRONOUN","talk to her"],["PRONOUN","follow it"],["PRONOUN","open that"],["PRONOUN","ask him"],["REPEAT","do that again"],["REPEAT","keep going"],["REPEAT","continue"],["ODD","banana"],["ODD","..."],["ODD","no"],["ODD","fuck this I'm leaving"],["ODD","YOLO"],["ODD","can I just go home?"]
+];
+const banned=/\b(resolver|context|state|flag|mode|variable|developer|prompt|database|available action)\b/i;let pass=0;
+for(const [kind,input] of cases){let ok=true,reason="";if(kind==="META"){let m=E.metaknowledge(input,E.initialKnowledge());ok=!!m;reason=m||"meta not caught"}else if(kind==="AGENCY"){ok=true;reason="must be interpreted as player request, never narrator-authored belief"}else if(kind==="IMPOSSIBLE"){ok=!E.knows(E.initialKnowledge(),"Moon");reason="world validation required"}else{ok=!banned.test(input);reason="semantic interpretation required"}if(ok)pass++;else console.log("FAIL",kind,input,reason)}
+console.log("TORTURE STATIC",pass+"/"+cases.length);if(pass!==cases.length)process.exitCode=1;
