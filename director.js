@@ -1,8 +1,8 @@
 export function direct(state,action,ctx={}){
 const threads=state.threads||{emily:0,visitations:0,aqua:0},min=state.min||1122,last=state.lastProgressMin||1122,stagnant=Math.max(0,min-last),escalation=state.worldEscalation||0;
-let a=String(action||"").toLowerCase(),layer="TERTIARY",thread=null,reason="No active story-bearing connection.";
+let a=String(action||"").toLowerCase(),layer="TERTIARY",thread=null,reason="No active story-bearing connection.";if(typeof StoryGraph!=="undefined"&&typeof STORY_GRAPH_DAY1!=="undefined"){let m=StoryGraph.match(action,state,STORY_GRAPH_DAY1);if(m){layer="DIRECT";thread=m.node.id;reason="Action matches a currently reachable story node: "+m.node.title;}}
 const directRules=[["emily",/mercer|emily|vance|caleb|david|missing girl|sheriff/],["visitations",/anna|voice|apparition|dead|rachel|manifest|gabriel|father reed/],["aqua",/archive|parish record|water damage|aqua|heres|old record/]];
-for(let [t,re] of directRules)if(re.test(a)){layer="DIRECT";thread=t;reason="Action directly touches an active story-bearing person, clue, place, or thread.";break}
+if(layer!=="DIRECT")for(let [t,re] of directRules)if(re.test(a)){layer="ADJACENT";thread=t;reason="Action touches story-bearing material but does not yet match a reachable progression node.";break}
 if(layer==="TERTIARY"){const adjacent=[["aqua",/bulletin|calendar|desk|church history|cemetery|ledger/],["emily",/maggie|gazette|nora|clinic|voss|reservoir/],["visitations",/prayer|confession|grief|photograph|cold|footprint/]];for(let [t,re] of adjacent)if(re.test(a)){layer="ADJACENT";thread=t;reason="Action is one bridge away from story-bearing material.";break}}
 let pressure=0;if(layer==="ADJACENT")pressure=stagnant>=30?2:1;if(layer==="TERTIARY")pressure=stagnant>=45?3:stagnant>=20?2:1;pressure=Math.min(4,pressure+(escalation>=60?1:0));
 let available=[];const events=ctx.events||[];for(let e of events)if(e&&e.id)available.push(e.id);
