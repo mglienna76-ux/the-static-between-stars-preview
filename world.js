@@ -1,7 +1,7 @@
 window.WORLD={
 meta:{version:"0.5",slice:"Malric Day -1",startMinute:1122,endMinute:1440},
 locations:{
-"St. Bartholomew's":{id:"church",name:"St. Bartholomew's Church",exits:["Rectory","Cemetery","Downtown"],discoverable:["Church Basement"],travel:{Rectory:1,Cemetery:2,Downtown:12}},
+"St. Bartholomew's":{id:"church",name:"St. Bartholomew's Church",exits:["Rectory","Cemetery","Downtown","Church Basement"],discoverable:["Church Basement"],travel:{Rectory:1,Cemetery:2,Downtown:12,"Church Basement":1}},
 "Rectory":{id:"rectory",name:"Rectory",exits:["St. Bartholomew's","Downtown"],travel:{"St. Bartholomew's":1,Downtown:12}},
 "Church Basement":{id:"basement",name:"Church Basement",exits:["St. Bartholomew's"],discoverable:["Archive Room"],travel:{"St. Bartholomew's":1}},
 "Archive Room":{id:"archive",name:"Parish Archive",exits:["Church Basement"],travel:{"Church Basement":0}},
