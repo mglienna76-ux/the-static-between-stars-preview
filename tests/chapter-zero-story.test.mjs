@@ -1,0 +1,7 @@
+import assert from "node:assert/strict";import{freshState,step,migrate}from"../chapter-zero/core.mjs";
+function run(commands){let s=freshState();for(let i=0;i<commands.length;i++){let r=step(s,commands[i],"story-"+i);s=r.state;}return s}
+let refuse=run(["Decline Mercer","Withdraw"]);assert.equal(refuse.mercer,"declined");assert.equal(refuse.endingId,"withdrawal");assert(refuse.storyNodes.includes("M1"));
+let privateRun=run(["Follow Anna's voice","Go downstairs","Approach Anna","Keep the evidence"]);assert.equal(privateRun.endingId,"private");assert(privateRun.storyNodes.includes("V2"));assert.equal(step(privateRun,"Go upstairs","extra").changed,false);
+let witness=run(["Agree to Mercer's favor","Read parish bulletin","Ask Father Reed about archive","Follow Anna's voice","Go downstairs","Examine boxes","Go upstairs","Go to rectory","Ask Father Reed about archive","Go to church","Go downstairs","Go to archive","Read old ledgers","Go downstairs","Approach Anna","Share evidence"]);assert.equal(witness.endingId,"witness");assert(witness.storyNodes.includes("A3"));assert(witness.storyNodes.includes("K1"));assert.equal(new Set(witness.storyNodes).size,witness.storyNodes.length);assert.deepEqual(migrate(JSON.parse(JSON.stringify(witness))),witness);
+let invalid=step(freshState(),"Share evidence","invalid");assert.equal(invalid.changed,false);assert.equal(invalid.state.endingId,null);
+console.log("CHAPTER ZERO STORY 12/12");
