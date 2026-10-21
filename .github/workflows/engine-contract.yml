@@ -4,6 +4,7 @@ name: Engine 0.3 Certification
   push:
     branches:
       - main
+      - chapter-zero-phase2
 
 permissions:
   contents: read
@@ -22,3 +23,5 @@ jobs:
           node-version: "22"
       - name: Run Engine 0.3 certification
         run: npm test
+      - name: Chapter Zero UI smoke tests
+        run: npm run test:chapter-zero-ui
