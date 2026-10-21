@@ -29,4 +29,4 @@ else if(/^(?:keep the evidence|keep evidence private|conceal evidence)$/.test(a)
 else if(/^(?:withdraw|leave the investigation|stop investigating|walk away)$/.test(a)){n.endingId="withdrawal";text=ENDINGS.withdrawal.epilogue;changed=true}
 else if(a==="look"||a==="look around")text="You take in "+ROOMS[n.location].name+" and its immediate surroundings.";
 else text="You can attempt that, but nothing in the immediate surroundings provides a clear result.";
-if(changed){const story=reconcileStory(n,events);n=story.state;n.committedActions.push(id);n.journal.push(text);n.lastOutcome={actionId:id,command,narration:text};}return result(n,text,changed)}
+if(changed){const story=reconcileStory(n,events);n=story.state;n.committedActions.push(id);n.journal.push(command);n.journal.push(text);n.lastOutcome={actionId:id,command,narration:text};}return result(n,text,changed)}
