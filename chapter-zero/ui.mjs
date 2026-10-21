@@ -1,3 +1,4 @@
+import {OPENING} from "./opening.mjs";
 import{freshState,migrate,step,ROOMS}from"./core.mjs";import{OBJECTS,PEOPLE}from"./content.mjs";
 export const VIEWS=["Story","Dashboard","Map","Cases","People","Inventory","Journal"];
 const KEY="sbs-chapter-zero-v1";let state,active="Story",lastText="Rain settles against the windows of St. Bartholomew's. Mercer's call waits for an answer. Somewhere within the church, a voice resembling Anna's breaks the silence.",serial=0;
@@ -8,7 +9,7 @@ function persist(next){const json=JSON.stringify(next);localStorage.setItem(KEY,
 function clock(min){let h=Math.floor(min/60)%24,m=min%60;return(h%12||12)+":"+String(m).padStart(2,"0")+" "+(h>=12?"PM":"AM")}
 export function viewMarkup(name,s,narration=""){const t=x=>escapeText(x),entries=a=>a.length?a.map(x=>'<div class="entry">'+t(x)+'</div>').join(""):'<p class="muted">Nothing recorded yet.</p>';
 switch(name){
-case"Story":return'<h2>Story</h2><p>'+t(narration||"The evening continues.")+'</p>'+(s.endingId?'<p><strong>Chapter ended: '+t(s.endingId)+'</strong></p>':'');
+case"Story":return'<h2>Story</h2>'+(s.committedActions.length===0?'<h3>'+t(OPENING.title)+'</h3>'+OPENING.paragraphs.map(p=>'<p>'+t(p)+'</p>').join(""):'<p>'+t(narration||"The evening continues.")+'</p>')+(s.endingId?'<p><strong>Chapter ended: '+t(s.endingId)+'</strong></p>':'');
 case"Dashboard":return'<h2>Brother Michael Malric</h2><p>Time: '+t(clock(s.minute))+'</p><p>THE STATIC — QUIET</p><p>Mercer: '+t(s.mercer)+'</p><p>Anna: '+t(s.anna)+'</p><p>Chapter: '+t(s.endingId||"in progress")+'</p>';
 case"Map":return'<h2>Known Locations</h2>'+entries(s.knownRooms.map(k=>ROOMS[k]?.name||k))+'<p>Current: '+t(ROOMS[s.location]?.name)+'</p>';
 case"Cases":return'<h2>Case Files</h2><p>Emily Vance · Visitations · Parish Records</p><h3>Verified clues</h3>'+entries(s.clues);
