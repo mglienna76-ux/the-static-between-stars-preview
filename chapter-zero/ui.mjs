@@ -7,12 +7,12 @@ export const VIEWS=["Story","Dashboard","Map","Cases","People","Inventory","Jour
 const KEY="sbs-chapter-zero-v1";let state,active="Story",lastText="Rain settles against the windows of St. Bartholomew's. Mercer's call waits for an answer. Somewhere within the church, a voice resembling Anna's breaks the silence.",serial=0;
 const $=id=>document.getElementById(id);
 function escapeText(x){return String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function restore(){try{const raw=localStorage.getItem(KEY);state=raw?migrate(JSON.parse(raw)):freshState();lastText=state.lastOutcome?.narration||lastText;$("save").textContent=raw?"Save restored":"New run"}catch(e){state=freshState();$("save").textContent="Previous save could not be restored; new run";} }
+function restore(){try{const raw=localStorage.getItem(KEY);state=raw?migrate(JSON.parse(raw)):freshState();lastText=state.lastOutcome?.narration||"";$("save").textContent=raw?"Save restored":"New run"}catch(e){state=freshState();$("save").textContent="Previous save could not be restored; new run";} }
 function persist(next){const json=JSON.stringify(next);localStorage.setItem(KEY,json);state=next;$("save").textContent="Saved"}
 function clock(min){let h=Math.floor(min/60)%24,m=min%60;return(h%12||12)+":"+String(m).padStart(2,"0")+" "+(h>=12?"PM":"AM")}
 export function viewMarkup(name,s,narration=""){const t=x=>escapeText(x),entries=a=>a.length?a.map(x=>'<div class="entry">'+t(x)+'</div>').join(""):'<p class="muted">Nothing recorded yet.</p>';
 switch(name){
-case"Story":return(s.committedActions.length===0?'<h3>'+t(OPENING.title)+'</h3>'+OPENING.paragraphs.map(p=>'<p>'+t(p)+'</p>').join(""):'<h2>Story</h2><p>'+t(narration||"The evening continues.")+'</p>')+(s.endingId?'<p><strong>Chapter ended: '+t(s.endingId)+'</strong></p>':'');
+case"Story":return(s.committedActions.length===0&&!narration?'<h3>'+t(OPENING.title)+'</h3>'+OPENING.paragraphs.map(p=>'<p>'+t(p)+'</p>').join(""):'<h2>Story</h2><p>'+t(narration||"The evening continues.")+'</p>')+(s.endingId?'<p><strong>Chapter ended: '+t(s.endingId)+'</strong></p>':'');
 case"Dashboard":return'<h2>Brother Michael Malric</h2><p>Time: '+t(clock(s.minute))+'</p><p>THE STATIC — QUIET</p><p>Mercer: '+t(s.mercer)+'</p><p>Anna: '+t(s.anna)+'</p><p>Chapter: '+t(s.endingId||"in progress")+'</p>';
 case"Map":return'<h2>Known Locations</h2>'+entries(s.knownRooms.map(k=>ROOMS[k]?.name||k))+'<p>Current: '+t(ROOMS[s.location]?.name)+'</p>';
 case"Cases":return'<h2>Case Files</h2><p>Emily Vance · Visitations · Parish Records</p><h3>Established knowledge</h3>'+entries(continuity(s));
