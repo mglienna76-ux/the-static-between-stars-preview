@@ -23,6 +23,8 @@ jobs:
           node-version: "22"
       - name: Run Engine 0.3 certification
         run: npm test
+      - name: Chapter Zero scene continuity
+        run: node tests/chapter-zero-scene-continuity.test.mjs
       - name: Chapter Zero continuity memory
         run: node tests/chapter-zero-continuity.test.mjs
       - name: Chapter Zero narrative consistency
