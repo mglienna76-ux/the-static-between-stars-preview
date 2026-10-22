@@ -7,7 +7,7 @@ export function gabrielResponse(state,topic){
   if(state.clues.includes("service_stair"))return "Gabriel looks toward the service corridor. 'You heard the voice near the stairs?' he asks. He makes no claim to have heard it himself.";
   return "Gabriel listens without interruption. 'Tell me what you heard,' he says. 'I won't pretend to know what it means.'";
  }
- if(/record|water|box|archive/.test(t)){
+ if(/archive/.test(t)){return "Gabriel takes a moment before answering. The archive is secured, but he offers supervised access to the older parish records. The water-damaged boxes are still waiting to be sorted.";}if(/record|water|box/.test(t)){
   if(state.clues.includes("aqua_term"))return "Gabriel studies the words Aqua Heresis on the page. 'I don't know what the writer intended,' he says. 'We should establish the date and the source before deciding what it means.'";
   if(state.clues.includes("record_boxes"))return "Gabriel nods at the description of the boxes. 'Those were moved after the leak. Some material is older than our current catalog.'";
   return "Gabriel sets his papers aside. 'There was a leak. We moved what we could save. Most of it is ordinary parish business.'";
