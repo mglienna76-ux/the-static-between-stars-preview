@@ -1,3 +1,4 @@
+import {gabrielResponse} from "./conversation.mjs";
 // Authored narration for deterministic, approved Chapter Zero outcomes.
 export const SCENES={
 mercer_accept:"The phone is warm against Malric's ear. Mercer wastes little time on greetings. Emily Vance is missing, he says, and her family has begun to fear the worst. Beneath his clipped explanation is something Malric has rarely heard from the sheriff: uncertainty. When Malric agrees to help, Mercer lets out a breath and gives him what little he knows. The church around him remains quiet. The voice from the corridor does not return.",
@@ -18,7 +19,7 @@ if(previous.anna==="voice"&&next.anna==="stairs_discovered")return SCENES.anna_s
 if(previous.location==="church"&&loc==="basement")return SCENES.basement_enter;
 if(previous.location==="basement"&&loc==="church")return SCENES.church_return;
 if(a.includes("bulletin")&&a.startsWith("read"))return SCENES.bulletin+"\n\n"+fallback;
-if(a.includes("father reed")||a.includes("gabriel")){if(/anna|voice/.test(a))return SCENES.gabriel_anna;if(/record|water|box/.test(a))return SCENES.gabriel_records}
+if(a.includes("father reed")||a.includes("gabriel")){const reply=gabrielResponse(next,a);if(reply)return reply;if(/anna|voice/.test(a))return SCENES.gabriel_anna;if(/record|water|box/.test(a))return SCENES.gabriel_records}
 if(!previous.clues.includes("anna_observed")&&next.clues.includes("anna_observed"))return SCENES.anna_appears;
 if(!previous.clues.includes("anna_tested")&&next.clues.includes("anna_tested"))return SCENES.anna_test;
 return fallback;
