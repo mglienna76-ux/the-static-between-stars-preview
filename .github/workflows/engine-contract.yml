@@ -23,6 +23,8 @@ jobs:
           node-version: "22"
       - name: Run Engine 0.3 certification
         run: npm test
+      - name: Chapter Zero contextual LOOK
+        run: node tests/chapter-zero-look.test.mjs
       - name: Chapter Zero integrated opening path
         run: node tests/chapter-zero-opening-path.test.mjs
       - name: Chapter Zero conversational continuity
