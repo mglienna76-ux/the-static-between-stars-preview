@@ -1,3 +1,4 @@
+import {describeScene} from "./scene-descriptions.mjs";
 import {gabrielResponse} from "./conversation.mjs";
 // Authored narration for deterministic, approved Chapter Zero outcomes.
 export const SCENES={
@@ -13,6 +14,7 @@ anna_appears:"A figure stands beyond the storage shelves, where the weak bulb le
 anna_test:"The figure answers with a detail from years ago. It is close enough to hurt, and wrong in a way that cannot be blamed on distance or time. For a moment, only the low electrical hum of the bulb fills the basement."
 };
 export function narrationFor(command,previous,next,fallback){const a=String(command||"").toLowerCase(),loc=next.location;
+if(/^(?:look|look around|observe|survey)$/.test(a.trim()))return describeScene(next);
 if(previous.mercer==="pending"&&next.mercer==="accepted")return SCENES.mercer_accept;
 if(previous.mercer==="pending"&&next.mercer==="declined")return SCENES.mercer_decline;
 if(previous.anna==="voice"&&next.anna==="stairs_discovered")return SCENES.anna_stairs;
