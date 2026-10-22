@@ -4,7 +4,7 @@ import {narrationFor} from "./narrative.mjs";
 import {OPENING} from "./opening.mjs";
 import{freshState,migrate,step,ROOMS}from"./core.mjs";import{OBJECTS,PEOPLE}from"./content.mjs";
 export const VIEWS=["Story","Dashboard","Map","Cases","People","Inventory","Journal"];
-const KEY="sbs-chapter-zero-v1";let state,active="Story",lastText="Rain settles against the windows of St. Bartholomew's. Mercer's call waits for an answer. Somewhere within the church, a voice resembling Anna's breaks the silence.",serial=0;
+const KEY="sbs-chapter-zero-v1";let state,active="Story",lastText="",serial=0;
 const $=id=>document.getElementById(id);
 function escapeText(x){return String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function restore(){try{const raw=localStorage.getItem(KEY);state=raw?migrate(JSON.parse(raw)):freshState();lastText=state.lastOutcome?.narration||"";$("save").textContent=raw?"Save restored":"New run"}catch(e){state=freshState();$("save").textContent="Previous save could not be restored; new run";} }
