@@ -16,7 +16,7 @@ export const ROUTES={
  "archive:basement":{a:"basement",b:"archive",minutes:1,requiresAccess:"archive"},
  "cemetery:church":{a:"church",b:"cemetery",minutes:2}
 };
-export function freshState(){return{schemaVersion:VERSION,minute:1122,location:"church",knownRooms:["church","rectory","cemetery"],knownRoutes:["church:rectory","church:cemetery"],access:[],storyNodes:[],endingId:null,mercer:"pending",anna:"voice",clues:[],journal:["6:42 PM — Evening begins."],committedActions:[],lastOutcome:null}}
+export function freshState(){return{schemaVersion:VERSION,minute:1122,location:"church",knownRooms:["church","rectory","cemetery"],knownRoutes:["church:rectory","cemetery:church"],access:[],storyNodes:[],endingId:null,mercer:"pending",anna:"voice",clues:[],journal:["6:42 PM — Evening begins."],committedActions:[],lastOutcome:null}}
 function canonical(s){return String(s||"").toLowerCase().trim().replace(/[.!?]+$/,"").replace(/^(?:the|a)\s+/,"")}
 function resolveRoom(s){let x=canonical(s);return Object.keys(ROOMS).find(k=>k===x||canonical(ROOMS[k].name)===x)||({downstairs:"basement",upstairs:"church","down stairs":"basement","up stairs":"church","parish archive":"archive"})[x]||null}
 function link(a,b){return [a,b].sort().join(":")}
