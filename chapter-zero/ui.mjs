@@ -2,7 +2,7 @@ import {composeScene} from "./scene-continuity.mjs";
 import {continuity} from "./continuity.mjs";
 import {narrationFor} from "./narrative.mjs";
 import {OPENING} from "./opening.mjs";
-import{freshState,migrate,step,ROOMS}from"./core.mjs";import{OBJECTS,PEOPLE}from"./content.mjs";
+import{freshState,migrate,step,ROOMS,ROUTES}from"./core.mjs";import{OBJECTS,PEOPLE}from"./content.mjs";
 export const VIEWS=["Story","Dashboard","Map","Cases","People","Inventory","Journal"];
 const KEY="sbs-chapter-zero-v1";let state,active="Story",lastText="",serial=0;
 const $=id=>document.getElementById(id);
@@ -14,7 +14,7 @@ export function viewMarkup(name,s,narration=""){const t=x=>escapeText(x),entries
 switch(name){
 case"Story":return(s.committedActions.length===0&&!narration?'<h3>'+t(OPENING.title)+'</h3>'+OPENING.paragraphs.map(p=>'<p>'+t(p)+'</p>').join(""):'<h2>Story</h2><p>'+t(narration||"The evening continues.")+'</p>')+(s.endingId?'<p><strong>Chapter ended: '+t(s.endingId)+'</strong></p>':'');
 case"Dashboard":return'<h2>Brother Michael Malric</h2><p>Time: '+t(clock(s.minute))+'</p><p>THE STATIC — QUIET</p><p>Mercer: '+t(s.mercer)+'</p><p>Anna: '+t(s.anna)+'</p><p>Chapter: '+t(s.endingId||"in progress")+'</p>';
-case"Map":return'<h2>Known Locations</h2>'+entries(s.knownRooms.map(k=>ROOMS[k]?.name||k))+'<p>Current: '+t(ROOMS[s.location]?.name)+'</p>';
+case"Map":{const routes=s.knownRoutes.map(k=>{const r=ROUTES[k];return r?ROOMS[r.a].name+" ↔ "+ROOMS[r.b].name+" · "+r.minutes+" min":k});return'<h2>Known Locations</h2>'+entries(s.knownRooms.map(k=>ROOMS[k]?.name||k))+'<h3>Known Routes</h3>'+entries(routes)+'<p>Current: '+t(ROOMS[s.location]?.name)+'</p>'}
 case"Cases":return'<h2>Case Files</h2><p>Emily Vance · Visitations · Parish Records</p><h3>Established knowledge</h3>'+entries(continuity(s));
 case"People":return'<h2>People</h2>'+entries(["Brother Michael Malric","Father Gabriel Reed","Sheriff Thomas Mercer (phone)","Anna — identity unverified"]);
 case"Inventory":return'<h2>Inventory & Access</h2>'+entries(["Personal belongings remain with Malric",...s.access.map(x=>"Access: "+x)]);
